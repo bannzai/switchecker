@@ -1,8 +1,8 @@
 package main
 
 type enum struct {
-	name    string
-	pattern []string
+	name     string
+	patterns []string
 }
 
 func parse() ([]enum, error) {
