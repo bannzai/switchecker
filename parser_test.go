@@ -4,6 +4,8 @@ import (
 	"go/ast"
 	"reflect"
 	"testing"
+
+	"github.com/bannzai/switchecker/pkg/testutil"
 )
 
 func Test_parse(t *testing.T) {
@@ -15,7 +17,26 @@ func Test_parse(t *testing.T) {
 		args args
 		want []enum
 	}{
-		// TODO: Add test cases.
+		{
+			name: "successfully parsed enum",
+			args: args{
+				filepaths: []string{
+					testutil.CallerDirectoryPath(t) + "/testdata/parser.go",
+				},
+			},
+			want: []enum{
+				{
+					name:        "language",
+					packageName: "testdata",
+					patterns: []string{
+						"golang",
+						"swift",
+						"objectivec",
+						"ruby",
+						"typescript",
+					}},
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

@@ -17,18 +17,15 @@ func parse(filepaths []string) []enum {
 	enums := []enum{}
 	for _, filepath := range filepaths {
 		e := enum{}
-		ast.Inspect(parseASTFile(filepath), func(node ast.Node) bool {
+
+		astFile := parseASTFile(filepath)
+		e.packageName = astFile.Name.Name
+
+		ast.Inspect(astFile, func(node ast.Node) bool {
 			// end inspect
 			if node == nil {
 				return false
 			}
-
-			// parsed package name
-			if p, ok := node.(*ast.Package); ok {
-				e.packageName = p.Name
-				return true
-			}
-
 			// parsed enum declearation
 			decl, ok := node.(*ast.GenDecl)
 			if !ok {
@@ -38,6 +35,7 @@ func parse(filepaths []string) []enum {
 				return true
 			}
 
+			patterns := []string{}
 			for _, spec := range decl.Specs {
 				valueSpec, ok := spec.(*ast.ValueSpec)
 				if !ok {
@@ -54,15 +52,14 @@ func parse(filepaths []string) []enum {
 					e.name = ident.Name
 				}
 
-				patterns := []string{}
 				for _, name := range valueSpec.Names {
 					if name.Name == "_" {
 						continue
 					}
 					patterns = append(patterns, name.Name)
 				}
-				e.patterns = patterns
 			}
+			e.patterns = patterns
 
 			enums = append(enums, e)
 
