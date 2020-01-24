@@ -1,14 +1,12 @@
 package main
 
 import (
-	"fmt"
 	"go/ast"
 	"go/importer"
 	"go/parser"
 	"go/token"
 	"go/types"
 	"io/ioutil"
-	"reflect"
 )
 
 type checkInfo struct {
