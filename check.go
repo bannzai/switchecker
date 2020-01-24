@@ -8,18 +8,12 @@ import (
 	"go/token"
 	"go/types"
 	"io/ioutil"
+	"reflect"
 )
 
-func recursivePrintChild(scope *types.Scope) {
-	numChildren := scope.NumChildren()
-	if numChildren == 0 {
-		return
-	}
-	for i := 0; i < numChildren; i++ {
-		child := scope.Child(i)
-		fmt.Printf("i: %d child: %v\n", i, child)
-		recursivePrintChild(child)
-	}
+type checkInfo struct {
+	enum
+	startPosition token.Pos
 }
 
 func check(enums []enum, filepath string) bool {
@@ -45,31 +39,69 @@ func check(enums []enum, filepath string) bool {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Printf("pkg: %v\n", pkg)
+
+	infos := []checkInfo{}
+
+	for _, enum := range enums {
+		for identifier, use := range info.Uses {
+			packageName := ""
+			if pkg := use.Pkg(); pkg != nil {
+				packageName = pkg.Name()
+			}
+			if enum.packageName != packageName {
+				continue
+			}
+			t := use.Type()
+			if t == nil {
+				continue
+			}
+
+			// NOTE: it expected namedType.Obj().Name() is "language"
+			namedType, ok := t.(*types.Named)
+			if !ok {
+				continue
+			}
+			if enum.name != namedType.Obj().Name() {
+				continue
+			}
+			infos = append(infos, checkInfo{enum: enum, startPosition: identifier.Pos()})
+		}
+	}
 
 	for node, scope := range info.Scopes {
-		if switchNode, ok := node.(*ast.SwitchStmt); ok {
-			fmt.Printf("node init: %v, tag %v, block pos start: %d end: %d, scope: %v \n", switchNode.Init, switchNode.Tag, switchNode.Body.Lbrace, switchNode.Body.Rbrace, scope)
-			for i, stmt := range switchNode.Body.List {
+		for _, info := range infos {
+			if !scope.Contains(info.startPosition) {
+				continue
+			}
+
+			switchNode, ok := node.(*ast.SwitchStmt)
+			if !ok {
+				continue
+			}
+
+			// FIXME: It is difficult to tell about `switch x` ast.SwitchStmt or  `case xyz:` ast.SwitchStmt.
+			patternContainer := map[string]struct{}{}
+			for _, stmt := range switchNode.Body.List {
 				if caseClause, ok := stmt.(*ast.CaseClause); ok {
-					for j, expr := range caseClause.List {
-						if identifier, ok := expr.(*ast.Ident); ok {
-							fmt.Printf("i: %d, j: %d, switch node statements: %v, identifier: %v \n", i, j, caseClause, identifier)
+					for _, expr := range caseClause.List {
+						if caseValue, ok := expr.(*ast.Ident); ok {
+							for _, pattern := range info.enum.patterns {
+								if pattern == caseValue.Name {
+									patternContainer[pattern] = struct{}{}
+								}
+							}
 						}
 					}
 				}
 			}
-			recursivePrintChild(scope)
+
+			for _, pattern := range info.enum.patterns {
+				if _, ok := patternContainer[pattern]; !ok {
+					return false
+				}
+			}
 		}
 	}
 
-	for identifier, use := range info.Uses {
-		pkg := use.Pkg()
-		pkgs := ""
-		if pkg != nil {
-			pkgs = pkg.Name()
-		}
-		fmt.Printf("identifier: %+v, pos: %d,  use: %+v, name: %s, package name: %s\n", identifier, identifier.Pos(), use, use.Name(), pkgs)
-	}
 	return true
 }
