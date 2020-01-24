@@ -71,6 +71,25 @@ func Test_check(t *testing.T) {
 			},
 			want: true,
 		},
+		{
+			name: "check_plural_switch_pattern",
+			args: args{
+				enums: []enum{
+					{
+						name:        "language3",
+						packageName: "testdata",
+						patterns: []string{
+							"golang3",
+							"swift3",
+							"objectivec3",
+							"ruby3",
+							"typescript3",
+						}},
+				},
+				filepath: testutil.CallerDirectoryPath(t) + "/testdata/check_plural_switch_pattern.go",
+			},
+			want: false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
