@@ -27,8 +27,6 @@ func check(enums []enum, filepath string) bool {
 		panic(err)
 	}
 	info := types.Info{
-		Types:  make(map[ast.Expr]types.TypeAndValue),
-		Defs:   make(map[*ast.Ident]types.Object),
 		Uses:   make(map[*ast.Ident]types.Object),
 		Scopes: make(map[ast.Node]*types.Scope),
 	}
