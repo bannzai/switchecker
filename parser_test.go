@@ -35,7 +35,36 @@ func Test_parse(t *testing.T) {
 						"objectivec",
 						"ruby",
 						"typescript",
-					}},
+					},
+				},
+			},
+		},
+		{
+			name: "complex gofile pattern",
+			args: args{
+				filepaths: []string{
+					testutil.CallerDirectoryPath(t) + "/testdata/parser2.go",
+				},
+			},
+			want: []enum{
+				{
+					name:        "staticlanguage",
+					packageName: "testdata",
+					packagePath: testutil.CallerDirectoryPath(t) + "/testdata",
+					patterns: []string{
+						"golang",
+						"swift",
+					},
+				},
+				{
+					name:        "dynamiclanguage",
+					packageName: "testdata",
+					packagePath: testutil.CallerDirectoryPath(t) + "/testdata",
+					patterns: []string{
+						"ruby",
+						"python",
+					},
+				},
 			},
 		},
 	}
