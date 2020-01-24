@@ -21,7 +21,7 @@ func Test_check(t *testing.T) {
 			args: args{
 				enums: []enum{
 					{
-						name:        "language",
+						name:        "language1",
 						packageName: "testdata",
 						patterns: []string{
 							"golang",
@@ -40,7 +40,7 @@ func Test_check(t *testing.T) {
 			args: args{
 				enums: []enum{
 					{
-						name:        "language",
+						name:        "language2",
 						packageName: "testdata",
 						patterns: []string{
 							"golang",

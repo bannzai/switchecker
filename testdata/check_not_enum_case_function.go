@@ -1,16 +1,16 @@
 package testdata
 
-type language int
+type language1 int
 
 const (
-	golang language = iota
+	golang language1 = iota
 	swift
 	objectivec
 	ruby
 	typescript
 )
 
-func function(x language) {
+func function(x language1) {
 	switch x {
 	case swift:
 		println("swift")
