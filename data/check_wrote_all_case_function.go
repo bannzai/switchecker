@@ -1,4 +1,4 @@
-package testdata
+package data
 
 type language2 int
 

@@ -22,7 +22,7 @@ func Test_check(t *testing.T) {
 				enums: []enum{
 					{
 						name:        "language1",
-						packageName: "testdata",
+						packageName: "data",
 						patterns: []string{
 							"golang",
 							"swift",
@@ -31,7 +31,7 @@ func Test_check(t *testing.T) {
 							"typescript",
 						}},
 				},
-				filepath: testutil.CallerDirectoryPath(t) + "/testdata/check_not_enum_case_function.go",
+				filepath: testutil.CallerDirectoryPath(t) + "/data/check_not_enum_case_function.go",
 			},
 			want: false,
 		},
@@ -41,7 +41,7 @@ func Test_check(t *testing.T) {
 				enums: []enum{
 					{
 						name:        "language2",
-						packageName: "testdata",
+						packageName: "data",
 						patterns: []string{
 							"golang",
 							"swift",
@@ -50,7 +50,7 @@ func Test_check(t *testing.T) {
 							"typescript",
 						}},
 				},
-				filepath: testutil.CallerDirectoryPath(t) + "/testdata/check_wrote_all_case_function.go",
+				filepath: testutil.CallerDirectoryPath(t) + "/data/check_wrote_all_case_function.go",
 			},
 			want: true,
 		},
@@ -67,7 +67,7 @@ func Test_check(t *testing.T) {
 							"Cherry",
 						}},
 				},
-				filepath: testutil.CallerDirectoryPath(t) + "/testdata/check_all_case_when_exported_package.go",
+				filepath: testutil.CallerDirectoryPath(t) + "/data/check_all_case_when_exported_package.go",
 			},
 			want: true,
 		},

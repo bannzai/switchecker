@@ -21,14 +21,14 @@ func Test_parse(t *testing.T) {
 			name: "successfully parsed enum",
 			args: args{
 				filepaths: []string{
-					testutil.CallerDirectoryPath(t) + "/testdata/parser.go",
+					testutil.CallerDirectoryPath(t) + "/data/parser.go",
 				},
 			},
 			want: []enum{
 				{
 					name:        "language",
-					packageName: "testdata",
-					packagePath: testutil.CallerDirectoryPath(t) + "/testdata",
+					packageName: "data",
+					packagePath: testutil.CallerDirectoryPath(t) + "/data",
 					patterns: []string{
 						"golang",
 						"swift",
