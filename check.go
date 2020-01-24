@@ -1,6 +1,8 @@
 package main
 
 import (
+	"errors"
+	"fmt"
 	"go/ast"
 	"go/importer"
 	"go/parser"
@@ -34,7 +36,11 @@ func check(enums []enum, filepath string) bool {
 	var conf types.Config
 	conf.Importer = importer.Default()
 	_, err = conf.Check(filepath, fileSet, []*ast.File{astFile}, &info)
-	if err != nil {
+
+	e := types.Error{}
+	if errors.As(err, &e) {
+		fmt.Printf("Maybe import is incomplete with %v\n", e)
+	} else if err != nil {
 		panic(err)
 	}
 

@@ -3,25 +3,25 @@ package data
 type language2 int
 
 const (
-	golang language2 = iota
-	swift
-	objectivec
-	ruby
-	typescript
+	golang2 language2 = iota
+	swift2
+	objectivec2
+	ruby2
+	typescript2
 )
 
 func function2(x language2) {
 	switch x {
-	case swift:
-		println("swift")
-	case ruby:
-		println("ruby")
-	case golang:
-		println("golang")
-	case typescript:
-		println("typescript")
-	case objectivec:
-		println("objectivec")
+	case swift2:
+		println("swift2")
+	case ruby2:
+		println("ruby2")
+	case golang2:
+		println("golang2")
+	case typescript2:
+		println("typescript2")
+	case objectivec2:
+		println("objectivec2")
 	default:
 		println("default")
 	}

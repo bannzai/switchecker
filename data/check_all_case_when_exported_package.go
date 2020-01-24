@@ -1,6 +1,6 @@
 package data
 
-import "./x"
+import "github.com/bannzai/switchecker/x"
 
 func functionForX(f x.Fruit) {
 	switch f {
