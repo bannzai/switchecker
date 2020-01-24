@@ -33,7 +33,7 @@ func check(enums []enum, filepath string) bool {
 
 	var conf types.Config
 	conf.Importer = importer.Default()
-	pkg, err := conf.Check(filepath, fileSet, []*ast.File{astFile}, &info)
+	_, err = conf.Check(filepath, fileSet, []*ast.File{astFile}, &info)
 	if err != nil {
 		panic(err)
 	}
