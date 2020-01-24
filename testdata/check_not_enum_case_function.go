@@ -10,7 +10,7 @@ const (
 	typescript1
 )
 
-func function(x language1) {
+func function1(x language1) {
 	switch x {
 	case swift1:
 		println("swift1")
