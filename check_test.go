@@ -17,7 +17,7 @@ func Test_check(t *testing.T) {
 		want bool
 	}{
 		{
-			name: "#01",
+			name: "check_not_enum_case_function",
 			args: args{
 				enums: []enum{
 					{
@@ -36,7 +36,7 @@ func Test_check(t *testing.T) {
 			want: false,
 		},
 		{
-			name: "#02",
+			name: "check_wrote_all_case_function",
 			args: args{
 				enums: []enum{
 					{
@@ -51,6 +51,23 @@ func Test_check(t *testing.T) {
 						}},
 				},
 				filepath: testutil.CallerDirectoryPath(t) + "/testdata/check_wrote_all_case_function.go",
+			},
+			want: true,
+		},
+		{
+			name: "check_all_case_when_exported_package",
+			args: args{
+				enums: []enum{
+					{
+						name:        "Fruit",
+						packageName: "x",
+						patterns: []string{
+							"Apple",
+							"Orange",
+							"Cherry",
+						}},
+				},
+				filepath: testutil.CallerDirectoryPath(t) + "/testdata/check_all_case_when_exported_package.go",
 			},
 			want: true,
 		},
