@@ -5,21 +5,24 @@ import (
 	"go/parser"
 	"go/token"
 	"io/ioutil"
+	"path/filepath"
 )
 
 type enum struct {
 	name        string
 	packageName string
+	packagePath string
 	patterns    []string
 }
 
 func parse(filepaths []string) []enum {
 	enums := []enum{}
-	for _, filepath := range filepaths {
+	for _, path := range filepaths {
 		e := enum{}
 
-		astFile := parseASTFile(filepath)
+		astFile := parseASTFile(path)
 		e.packageName = astFile.Name.Name
+		e.packagePath = filepath.Dir(path)
 
 		ast.Inspect(astFile, func(node ast.Node) bool {
 			// end inspect
@@ -69,13 +72,13 @@ func parse(filepaths []string) []enum {
 	return enums
 }
 
-func parseASTFile(filepath string) *ast.File {
-	buf, err := ioutil.ReadFile(filepath)
+func parseASTFile(path string) *ast.File {
+	buf, err := ioutil.ReadFile(path)
 	if err != nil {
 		panic(err)
 	}
 	fileSet := token.NewFileSet()
-	astFile, err := parser.ParseFile(fileSet, filepath, buf, 0)
+	astFile, err := parser.ParseFile(fileSet, path, buf, 0)
 	if err != nil {
 		panic(err)
 	}

@@ -28,6 +28,7 @@ func Test_parse(t *testing.T) {
 				{
 					name:        "language",
 					packageName: "testdata",
+					packagePath: testutil.CallerDirectoryPath(t) + "/testdata",
 					patterns: []string{
 						"golang",
 						"swift",
