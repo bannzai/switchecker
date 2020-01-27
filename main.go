@@ -7,13 +7,11 @@ import (
 	"path/filepath"
 )
 
-var ()
-
 func main() {
 	var source string
 	var target string
-	flag.StringVar(&source, "source", "./", "Source go files are containing enum definition")
-	flag.StringVar(&target, "target", "./", "Target go files are containing to use enum")
+	flag.StringVar(&source, "source", "./**/*.go", "Source go files are containing enum definition")
+	flag.StringVar(&target, "target", "./**/*.go", "Target go files are containing to use enum")
 	flag.Parse()
 
 	cwd, err := os.Getwd()
