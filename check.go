@@ -9,6 +9,7 @@ import (
 	"go/token"
 	"go/types"
 	"io/ioutil"
+	"reflect"
 )
 
 type checkInfo struct {
@@ -35,6 +36,37 @@ func check(enums []enum, filepath string) error {
 
 	var conf types.Config
 	conf.Importer = importer.Default()
+	conf.Error = func(err error) {
+		fmt.Println("err start ----- ")
+		fmt.Println("err: " + err.Error())
+		fmt.Printf("error type: %v\n", reflect.TypeOf(err))
+		fmt.Println("err end ----- ")
+	}
+	// debug
+	// 	func() {
+	// 		fmt.Println("DEBUG: --- ")
+	// 		p := "/Users/yudai.hirose/go/src/github.com/bannzai/switchecker/example/missing/with_external/thirdparty/thirdparty.go"
+	// 		b, err := ioutil.ReadFile(p)
+	// 		if err != nil {
+	// 			panic(err)
+	// 		}
+	// 		f, err := parser.ParseFile(fileSet, p, b, 0)
+	// 		if err != nil {
+	// 			panic(err)
+	// 		}
+	// 		info := types.Info{
+	// 			Uses:   make(map[*ast.Ident]types.Object),
+	// 			Scopes: make(map[ast.Node]*types.Scope),
+	// 		}
+	// 		pkg, err := conf.Check(p, fileSet, []*ast.File{f}, &info)
+	// 		debugf("types.Info.Uses of %+v. and scopes is %+v\n", info.Uses, info.Scopes)
+	// 		if err != nil {
+	// 			panic(err)
+	// 		}
+	// 		pkg.MarkComplete()
+	// 		fmt.Println("END: --- ")
+	// 	}()
+
 	pkg, err := conf.Check(filepath, fileSet, []*ast.File{astFile}, &info)
 	debugf("types.Info.Uses of %+v. and scopes is %+v\n", info.Uses, info.Scopes)
 	e := types.Error{}
@@ -52,20 +84,6 @@ func check(enums []enum, filepath string) error {
 
 	for _, enum := range enums {
 		for identifier, use := range info.Uses {
-			debugf("use check info: %+v\n", use)
-			packageName := ""
-			if pkg := use.Pkg(); pkg != nil {
-				packageName = pkg.Name()
-			}
-			debugf("enum.packageName is %s, use packageName is %s\n", enum.packageName, packageName)
-			if enum.packageName != packageName {
-				continue
-			}
-			t := use.Type()
-			if t == nil {
-				continue
-			}
-
 			// NOTE: it expected namedType.Obj().Name() is "language" if below statement.
 			/*
 				type language int
@@ -74,7 +92,7 @@ func check(enums []enum, filepath string) error {
 					swift
 				)
 			*/
-			namedType, ok := t.(*types.Named)
+			namedType, ok := use.Type().(*types.Named)
 			if !ok {
 				continue
 			}
