@@ -16,15 +16,15 @@ type checkInfo struct {
 	startPosition token.Pos
 }
 
-func check(enums []enum, filepath string) bool {
+func check(enums []enum, filepath string) error {
 	fileSet := token.NewFileSet()
 	bytes, err := ioutil.ReadFile(filepath)
 	if err != nil {
-		panic(err)
+		return err
 	}
 	astFile, err := parser.ParseFile(fileSet, filepath, bytes, 0)
 	if err != nil {
-		panic(err)
+		return err
 	}
 	info := types.Info{
 		Uses:   make(map[*ast.Ident]types.Object),
@@ -39,7 +39,7 @@ func check(enums []enum, filepath string) bool {
 	if errors.As(err, &e) {
 		fmt.Printf("Maybe import is incomplete with %v\n", e)
 	} else if err != nil {
-		panic(err)
+		return err
 	}
 
 	infos := []checkInfo{}
@@ -99,11 +99,11 @@ func check(enums []enum, filepath string) bool {
 
 			for _, pattern := range info.enum.patterns {
 				if _, ok := patternContainer[pattern]; !ok {
-					return false
+					return fmt.Errorf("missing enum pattern for %s.%s.%s.", info.enum.packageName, info.enum.name, pattern)
 				}
 			}
 		}
 	}
 
-	return true
+	return nil
 }
