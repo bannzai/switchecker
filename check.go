@@ -35,13 +35,7 @@ func check(enums []enum, filepath string, sources []string) error {
 
 	var conf types.Config
 	conf.Importer = importer.Default()
-
-	astFiles := make([]*ast.File, len(sources)+1)
-	astFiles[0] = astFile
-	for i, source := range sources {
-		astFiles[i+1] = parseASTFile(source)
-	}
-	_, err = conf.Check(filepath, fileSet, astFiles, &info)
+	_, err = conf.Check(filepath, fileSet, []*ast.File{astFile}, &info)
 	debugf("types.Info.Uses of %+v. and scopes is %+v\n", info.Uses, info.Scopes)
 
 	e := types.Error{}
