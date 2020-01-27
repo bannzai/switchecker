@@ -106,7 +106,7 @@ func check(enums []enum, filepath string) error {
 
 			for _, pattern := range info.enum.patterns {
 				if _, ok := patternContainer[pattern]; !ok {
-					return fmt.Errorf("missing enum pattern for %s.%s.%s.", info.enum.packageName, info.enum.name, pattern)
+					return fmt.Errorf("missing enum pattern for %s.%s.%s. at %s:%d", info.enum.packageName, info.enum.name, pattern, filepath, switchNode.Switch)
 				}
 			}
 		}
