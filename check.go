@@ -58,7 +58,14 @@ func check(enums []enum, filepath string) error {
 				continue
 			}
 
-			// NOTE: it expected namedType.Obj().Name() is "language"
+			// NOTE: it expected namedType.Obj().Name() is "language" if below statement.
+			/*
+				type language int
+				const (
+					golang language = iota
+					swift
+				)
+			*/
 			namedType, ok := t.(*types.Named)
 			if !ok {
 				continue
