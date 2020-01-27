@@ -83,6 +83,8 @@ func check(enums []enum, filepath string, sources []string) error {
 		}
 	}
 
+	debugf("infos: %+v\n", infos)
+
 	for node, scope := range info.Scopes {
 		for _, info := range infos {
 			if !scope.Contains(info.startPosition) {
