@@ -40,7 +40,7 @@ func main() {
 	debugf("enum parse end: %v\n", enums)
 	for _, targetPath := range targets {
 		debugf("start check %s\n", targetPath)
-		if err := check(enums, targetPath); err != nil {
+		if err := check(enums, targetPath, sources); err != nil {
 			log.Fatal(err)
 		}
 		debugf("end check %s\n", targetPath)

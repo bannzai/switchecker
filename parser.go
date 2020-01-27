@@ -72,7 +72,13 @@ func parse(filepaths []string) []enum {
 	return enums
 }
 
+var cachedSourceASTFile = map[string]*ast.File{}
+
 func parseASTFile(path string) *ast.File {
+	if f, ok := cachedSourceASTFile[path]; ok {
+		return f
+	}
+
 	buf, err := ioutil.ReadFile(path)
 	if err != nil {
 		panic(err)

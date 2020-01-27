@@ -16,13 +16,15 @@ type checkInfo struct {
 	startPosition token.Pos
 }
 
-func check(enums []enum, filepath string) error {
+func check(enums []enum, filepath string, sources []string) error {
 	fileSet := token.NewFileSet()
 	bytes, err := ioutil.ReadFile(filepath)
 	if err != nil {
-		return err
+		return fmt.Errorf("target filepath: %s read error %w", filepath, err)
 	}
+
 	astFile, err := parser.ParseFile(fileSet, filepath, bytes, 0)
+	debugf("file set is %+v\n", fileSet)
 	if err != nil {
 		return err
 	}
@@ -33,7 +35,13 @@ func check(enums []enum, filepath string) error {
 
 	var conf types.Config
 	conf.Importer = importer.Default()
-	_, err = conf.Check(filepath, fileSet, []*ast.File{astFile}, &info)
+
+	astFiles := make([]*ast.File, len(sources)+1)
+	astFiles[0] = astFile
+	for i, source := range sources {
+		astFiles[i+1] = parseASTFile(source)
+	}
+	_, err = conf.Check(filepath, fileSet, astFiles, &info)
 	debugf("types.Info.Uses of %+v. and scopes is %+v\n", info.Uses, info.Scopes)
 
 	if len(info.Uses) == 0 {
