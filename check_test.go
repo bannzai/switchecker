@@ -33,7 +33,7 @@ func Test_check(t *testing.T) {
 				},
 				filepath: testutil.CallerDirectoryPath(t) + "/testdata/check_not_enum_case_function.go",
 			},
-			wantErr: false,
+			wantErr: true,
 		},
 		{
 			name: "check_wrote_all_case_function",
@@ -52,7 +52,7 @@ func Test_check(t *testing.T) {
 				},
 				filepath: testutil.CallerDirectoryPath(t) + "/testdata/check_wrote_all_case_function.go",
 			},
-			wantErr: true,
+			wantErr: false,
 		},
 		{
 			name: "check_all_case_when_exported_package",
@@ -69,7 +69,7 @@ func Test_check(t *testing.T) {
 				},
 				filepath: testutil.CallerDirectoryPath(t) + "/testdata/check_all_case_when_exported_package.go",
 			},
-			wantErr: true,
+			wantErr: false,
 		},
 		{
 			name: "check_plural_switch_pattern",
@@ -88,7 +88,7 @@ func Test_check(t *testing.T) {
 				},
 				filepath: testutil.CallerDirectoryPath(t) + "/testdata/check_plural_switch_pattern.go",
 			},
-			wantErr: false,
+			wantErr: true,
 		},
 	}
 	for _, tt := range tests {
