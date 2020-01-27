@@ -34,10 +34,16 @@ func check(enums []enum, filepath string) error {
 	var conf types.Config
 	conf.Importer = importer.Default()
 	_, err = conf.Check(filepath, fileSet, []*ast.File{astFile}, &info)
+	debugf("types.Info.Uses of %+v. and scopes is %+v\n", info.Uses, info.Scopes)
+
+	if len(info.Uses) == 0 {
+		debugf("info.Uses is empty\n")
+		return nil
+	}
 
 	e := types.Error{}
 	if errors.As(err, &e) {
-		debugf("Maybe import is incomplete with %v\n", e)
+		debugf("Maybe import is incomplete with %+v\n", e)
 	} else if err != nil {
 		return err
 	}
@@ -46,10 +52,12 @@ func check(enums []enum, filepath string) error {
 
 	for _, enum := range enums {
 		for identifier, use := range info.Uses {
+			debugf("use check info: %+v\n", use)
 			packageName := ""
 			if pkg := use.Pkg(); pkg != nil {
 				packageName = pkg.Name()
 			}
+			debugf("enum.packageName is %s, use packageName is %s\n", enum.packageName, packageName)
 			if enum.packageName != packageName {
 				continue
 			}
@@ -70,6 +78,7 @@ func check(enums []enum, filepath string) error {
 			if !ok {
 				continue
 			}
+			debugf("enum.name is %s, use enum type name is %s\n", enum.name, namedType.Obj().Name())
 			if enum.name != namedType.Obj().Name() {
 				continue
 			}
