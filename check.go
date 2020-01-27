@@ -87,13 +87,13 @@ func check(enums []enum, filepath string) error {
 
 	for node, scope := range info.Scopes {
 		debugf("scope info: %+v\n", *scope)
+
+		switchNode, ok := node.(*ast.SwitchStmt)
+		if !ok {
+			continue
+		}
 		for _, info := range infos {
 			if !scope.Contains(info.startPosition) {
-				continue
-			}
-
-			switchNode, ok := node.(*ast.SwitchStmt)
-			if !ok {
 				continue
 			}
 
