@@ -1,6 +1,6 @@
 package main
 
-import "./thirdparty"
+import "github.com/bannzai/switchecker/example/valid/with_external/thirdparty"
 
 func main() {
 	lang := thirdparty.Golang
