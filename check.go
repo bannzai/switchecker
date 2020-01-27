@@ -44,11 +44,6 @@ func check(enums []enum, filepath string, sources []string) error {
 	_, err = conf.Check(filepath, fileSet, astFiles, &info)
 	debugf("types.Info.Uses of %+v. and scopes is %+v\n", info.Uses, info.Scopes)
 
-	if len(info.Uses) == 0 {
-		debugf("info.Uses is empty\n")
-		return nil
-	}
-
 	e := types.Error{}
 	if errors.As(err, &e) {
 		debugf("Maybe import is incomplete with %+v\n", e)
