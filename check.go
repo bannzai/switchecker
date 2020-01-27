@@ -37,7 +37,7 @@ func check(enums []enum, filepath string) error {
 
 	e := types.Error{}
 	if errors.As(err, &e) {
-		fmt.Printf("Maybe import is incomplete with %v\n", e)
+		debugf("Maybe import is incomplete with %v\n", e)
 	} else if err != nil {
 		return err
 	}
