@@ -33,13 +33,17 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	debugf("target file search end: %v\n", targets)
 
 	debugf("enum parse start: \n")
 	enums := parse(sources)
+	debugf("enum parse end: %v\n", enums)
 	for _, targetPath := range targets {
+		debugf("start check %s", targetPath)
 		if err := check(enums, targetPath); err != nil {
 			log.Fatal(err)
 		}
+		debugf("end check %s", targetPath)
 	}
 
 	fmt.Println("\033[32mSuccesfull!!\033[0m")
