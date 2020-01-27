@@ -37,4 +37,6 @@ func main() {
 			log.Fatal(err)
 		}
 	}
+
+	fmt.Println("\033[32mSuccesfull!!\033[0m")
 }
