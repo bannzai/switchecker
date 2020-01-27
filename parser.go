@@ -88,5 +88,6 @@ func parseASTFile(path string) *ast.File {
 	if err != nil {
 		panic(err)
 	}
+	cachedSourceASTFile[path] = astFile
 	return astFile
 }
