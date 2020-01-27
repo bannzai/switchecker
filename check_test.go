@@ -12,9 +12,9 @@ func Test_check(t *testing.T) {
 		filepath string
 	}
 	tests := []struct {
-		name string
-		args args
-		want bool
+		name    string
+		args    args
+		wantErr bool
 	}{
 		{
 			name: "check_not_enum_case_function",
@@ -33,7 +33,7 @@ func Test_check(t *testing.T) {
 				},
 				filepath: testutil.CallerDirectoryPath(t) + "/testdata/check_not_enum_case_function.go",
 			},
-			want: false,
+			wantErr: false,
 		},
 		{
 			name: "check_wrote_all_case_function",
@@ -52,7 +52,7 @@ func Test_check(t *testing.T) {
 				},
 				filepath: testutil.CallerDirectoryPath(t) + "/testdata/check_wrote_all_case_function.go",
 			},
-			want: true,
+			wantErr: true,
 		},
 		{
 			name: "check_all_case_when_exported_package",
@@ -69,7 +69,7 @@ func Test_check(t *testing.T) {
 				},
 				filepath: testutil.CallerDirectoryPath(t) + "/testdata/check_all_case_when_exported_package.go",
 			},
-			want: true,
+			wantErr: true,
 		},
 		{
 			name: "check_plural_switch_pattern",
@@ -88,13 +88,13 @@ func Test_check(t *testing.T) {
 				},
 				filepath: testutil.CallerDirectoryPath(t) + "/testdata/check_plural_switch_pattern.go",
 			},
-			want: false,
+			wantErr: false,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := check(tt.args.enums, tt.args.filepath); got != tt.want {
-				t.Errorf("check() = %v, want %v", got, tt.want)
+			if got := check(tt.args.enums, tt.args.filepath); (got != nil) != tt.wantErr {
+				t.Errorf("check() = %v, wantErr %v", got, tt.wantErr)
 			}
 		})
 	}

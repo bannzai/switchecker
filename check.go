@@ -16,7 +16,7 @@ type checkInfo struct {
 	startPosition token.Pos
 }
 
-func check(enums []enum, filepath string, sources []string) error {
+func check(enums []enum, filepath string) error {
 	fileSet := token.NewFileSet()
 	bytes, err := ioutil.ReadFile(filepath)
 	if err != nil {
