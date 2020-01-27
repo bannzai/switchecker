@@ -1,5 +1,9 @@
 package main
 
+import (
+	"fmt"
+)
+
 type language int
 
 const (
@@ -11,7 +15,7 @@ func main() {
 	lang := golang
 	switch lang {
 	case golang:
-		println("golang")
+		fmt.Println("golang")
 	default:
 		println("default")
 	}
