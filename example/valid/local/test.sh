@@ -2,4 +2,4 @@
 set -eu
 set -o pipefail
 
-switchecker 
+switchecker --verbose

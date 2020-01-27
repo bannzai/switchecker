@@ -2,4 +2,4 @@
 set -eu
 set -o pipefail
 
-switchecker -source=thirdparty/*.go 
+switchecker -source=thirdparty/*.go --verbose
