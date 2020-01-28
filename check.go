@@ -15,7 +15,7 @@ type checkInfo struct {
 	startPosition token.Pos
 }
 
-func debug(enums []enum, filepath string) error {
+func check(enums []enum, filepath string) error {
 	config := &packages.Config{Mode: packages.LoadSyntax}
 	pkgs, err := packages.Load(config, filepath)
 	//pkgs, err := packages.Load(nil, "github.com/bannzai/switchecker/example/missing/with_external/thirdparty")
@@ -111,8 +111,4 @@ func debug(enums []enum, filepath string) error {
 		}
 	}
 	return nil
-}
-
-func check(enums []enum, filepath string) error {
-	return debug(enums, filepath)
 }
