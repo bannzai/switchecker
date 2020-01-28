@@ -1,14 +1,13 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 	"go/ast"
-	"go/importer"
-	"go/parser"
 	"go/token"
 	"go/types"
-	"io/ioutil"
+	"reflect"
+
+	"golang.org/x/tools/go/packages"
 )
 
 type checkInfo struct {
@@ -16,76 +15,19 @@ type checkInfo struct {
 	startPosition token.Pos
 }
 
-func check(enums []enum, filepath string) error {
-	fileSet := token.NewFileSet()
-	bytes, err := ioutil.ReadFile(filepath)
-	if err != nil {
-		return fmt.Errorf("target filepath: %s read error %w", filepath, err)
-	}
-
-	astFile, err := parser.ParseFile(fileSet, filepath, bytes, 0)
-	debugf("file set is %+v\n", fileSet)
+func debug(enums []enum, filepath string) error {
+	config := &packages.Config{Mode: packages.LoadSyntax}
+	pkgs, err := packages.Load(config, filepath)
+	//pkgs, err := packages.Load(nil, "github.com/bannzai/switchecker/example/missing/with_external/thirdparty")
 	if err != nil {
 		return err
 	}
-	info := types.Info{
-		Uses:   make(map[*ast.Ident]types.Object),
-		Scopes: make(map[ast.Node]*types.Scope),
-	}
 
-	var conf types.Config
-	conf.Importer = importer.Default()
-	conf.Error = func(err error) {
-		e := types.Error{}
-		if errors.As(err, &e) {
-			debugf("e.Fset.Base: %d\n", e.Fset.Base)
-		}
-	}
-	// debug
-	//	func() {
-	//		fmt.Println("DEBUG: --- ")
-	//		p := "/Users/yudai.hirose/go/src/github.com/bannzai/switchecker/example/missing/with_external/thirdparty/thirdparty.go"
-	//		b, err := ioutil.ReadFile(p)
-	//		if err != nil {
-	//			panic(err)
-	//		}
-	//		f, err := parser.ParseFile(fileSet, p, b, 0)
-	//		if err != nil {
-	//			panic(err)
-	//		}
-	//		pkg, err := conf.Check(p, fileSet, []*ast.File{f}, &info)
-	//		debugf("types.Info.Uses of %+v. and scopes is %+v\n", info.Uses, info.Scopes)
-	//		if err != nil {
-	//			panic(err)
-	//		}
-	//		pkg.MarkComplete()
-	//		fmt.Println("END: --- ")
-	//	}()
-	//
-	pkg, err := conf.Check(filepath, fileSet, []*ast.File{astFile}, &info)
-	debugf("types.Info.Uses of %+v. and scopes is %+v\n", info.Uses, info.Scopes)
-	e := types.Error{}
-	if errors.As(err, &e) {
-		debugf("Maybe import is incomplete with %+v\n", e)
-	} else if err != nil {
-		return err
-	}
-	debugf("Package  %q\n", pkg.Path())
-	debugf("Name:    %s\n", pkg.Name())
-	debugf("Imports: %s\n", pkg.Imports())
-	debugf("Scope:   %s\n", pkg.Scope())
+	debugf("pkgs: %v,\n", pkgs)
 
 	infos := []checkInfo{}
-
+	info := pkgs[0].TypesInfo
 	for identifier, use := range info.Uses {
-		// NOTE: it expected namedType.Obj().Name() is "language" if below statement.
-		/*
-			type language int
-			const (
-				golang language = iota
-				swift
-			)
-		*/
 		namedType, ok := use.Type().(*types.Named)
 		if !ok {
 			continue
@@ -100,7 +42,7 @@ func check(enums []enum, filepath string) error {
 		}
 	}
 
-	debugf("infos: %+v\n", infos)
+	debugf("use info %v \n", infos)
 
 	for node, scope := range info.Scopes {
 		debugf("scope info: %+v\n", *scope)
@@ -118,29 +60,59 @@ func check(enums []enum, filepath string) error {
 			// FIXME: It is difficult to tell about `switch x` ast.SwitchStmt or  `case xyz:` ast.SwitchStmt.
 			patternContainer := map[string]struct{}{}
 			for _, stmt := range switchNode.Body.List {
+				debugf("stmt is %v\n", stmt)
 				if caseClause, ok := stmt.(*ast.CaseClause); ok {
-					for _, expr := range caseClause.List {
-						if caseValue, ok := expr.(*ast.Ident); ok {
-							for _, pattern := range info.enum.patterns {
-								if pattern == caseValue.Name {
-									patternContainer[pattern] = struct{}{}
+					debugf("caseClause is %v\n", *caseClause)
+					for _, caseExpr := range caseClause.List {
+						debugf("caseExpr is %v, type of %v\n", caseExpr, reflect.TypeOf(caseExpr))
+
+						func() {
+							// NOTE: this scope pack pattern names from external package
+							// FIXME: more explicit condition for extarct pattern name from external package
+							if caseValue, ok := caseExpr.(*ast.SelectorExpr); ok {
+								if packageInfo, ok := caseValue.X.(*ast.Ident); ok {
+									debugf("caseValue is %v, name of %v, x type is %v\n", caseValue, caseValue.Sel.Name, packageInfo.Name)
+									if packageInfo.Name == info.enum.packageName {
+										for _, pattern := range info.enum.patterns {
+											if pattern == caseValue.Sel.Name {
+												patternContainer[pattern] = struct{}{}
+											}
+										}
+									}
 								}
 							}
-						}
+						}()
+						func() {
+							// NOTE: this scope pack pattern names from internal package
+							// FIXME: more explicit condition for extarct pattern name from internal package
+							if caseValue, ok := caseExpr.(*ast.Ident); ok {
+								debugf("caseValue is %v, name of %v\n", caseValue, caseValue.Name)
+								for _, pattern := range info.enum.patterns {
+									if pattern == caseValue.Name {
+										patternContainer[pattern] = struct{}{}
+									}
+								}
+							}
+						}()
 					}
 				}
 			}
 
+			debugf("all patterns %v\n", patternContainer)
 			for _, pattern := range info.enum.patterns {
+				debugf("pattern: %v\n", pattern)
 				if _, ok := patternContainer[pattern]; !ok {
 					position := switchNode.Switch
-					file := fileSet.File(position)
+					file := pkgs[0].Fset.File(position)
 					line := file.Line(position)
 					return fmt.Errorf("missing enum pattern for %s.%s.%s. at %s:%d:%d", info.enum.packageName, info.enum.name, pattern, filepath, line, position)
 				}
 			}
 		}
 	}
-
 	return nil
+}
+
+func check(enums []enum, filepath string) error {
+	return debug(enums, filepath)
 }
