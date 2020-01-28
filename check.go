@@ -21,7 +21,6 @@ func check(enums []enum, filepath string) error {
 	if err != nil {
 		return err
 	}
-
 	debugf("pkgs: %v,\n", pkgs)
 
 	pkg := pkgs[0]
@@ -51,6 +50,7 @@ func check(enums []enum, filepath string) error {
 			continue
 		}
 		debugf("switchNode is %+v\n", switchNode)
+
 		for _, info := range keepUsesInfos {
 			if !scope.Contains(info.startPosition) {
 				continue
@@ -96,10 +96,11 @@ func check(enums []enum, filepath string) error {
 					}
 				}
 			}
-
 			debugf("all patterns %v\n", patternContainer)
+
 			for _, pattern := range info.enum.patterns {
 				debugf("pattern: %v\n", pattern)
+
 				if _, ok := patternContainer[pattern]; !ok {
 					position := switchNode.Switch
 					file := pkg.Fset.File(position)
