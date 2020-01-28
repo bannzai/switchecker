@@ -10,7 +10,7 @@ import (
 	"golang.org/x/tools/go/packages"
 )
 
-type checkInfo struct {
+type keepUsesInfo struct {
 	enum
 	startPosition token.Pos
 }
@@ -18,15 +18,15 @@ type checkInfo struct {
 func check(enums []enum, filepath string) error {
 	config := &packages.Config{Mode: packages.LoadSyntax}
 	pkgs, err := packages.Load(config, filepath)
-	//pkgs, err := packages.Load(nil, "github.com/bannzai/switchecker/example/missing/with_external/thirdparty")
 	if err != nil {
 		return err
 	}
 
 	debugf("pkgs: %v,\n", pkgs)
 
-	infos := []checkInfo{}
-	info := pkgs[0].TypesInfo
+	pkg := pkgs[0]
+	info := pkg.TypesInfo
+	keepUsesInfos := []keepUsesInfo{}
 	for identifier, use := range info.Uses {
 		namedType, ok := use.Type().(*types.Named)
 		if !ok {
@@ -38,11 +38,10 @@ func check(enums []enum, filepath string) error {
 			if enum.name != namedType.Obj().Name() {
 				continue
 			}
-			infos = append(infos, checkInfo{enum: enum, startPosition: identifier.Pos()})
+			keepUsesInfos = append(keepUsesInfos, keepUsesInfo{enum: enum, startPosition: identifier.Pos()})
 		}
 	}
-
-	debugf("use info %v \n", infos)
+	debugf("keep Uses infos %v \n", keepUsesInfos)
 
 	for node, scope := range info.Scopes {
 		debugf("scope info: %+v\n", *scope)
@@ -52,7 +51,7 @@ func check(enums []enum, filepath string) error {
 			continue
 		}
 		debugf("switchNode is %+v\n", switchNode)
-		for _, info := range infos {
+		for _, info := range keepUsesInfos {
 			if !scope.Contains(info.startPosition) {
 				continue
 			}
@@ -103,7 +102,7 @@ func check(enums []enum, filepath string) error {
 				debugf("pattern: %v\n", pattern)
 				if _, ok := patternContainer[pattern]; !ok {
 					position := switchNode.Switch
-					file := pkgs[0].Fset.File(position)
+					file := pkg.Fset.File(position)
 					line := file.Line(position)
 					return fmt.Errorf("missing enum pattern for %s.%s.%s. at %s:%d:%d", info.enum.packageName, info.enum.name, pattern, filepath, line, position)
 				}
