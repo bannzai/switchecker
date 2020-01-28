@@ -9,7 +9,6 @@ import (
 	"go/token"
 	"go/types"
 	"io/ioutil"
-	"reflect"
 )
 
 type checkInfo struct {
@@ -37,36 +36,32 @@ func check(enums []enum, filepath string) error {
 	var conf types.Config
 	conf.Importer = importer.Default()
 	conf.Error = func(err error) {
-		fmt.Println("err start ----- ")
-		fmt.Println("err: " + err.Error())
-		fmt.Printf("error type: %v\n", reflect.TypeOf(err))
-		fmt.Println("err end ----- ")
+		e := types.Error{}
+		if errors.As(err, &e) {
+			debugf("e.Fset.Base: %d\n", e.Fset.Base)
+		}
 	}
 	// debug
-	// 	func() {
-	// 		fmt.Println("DEBUG: --- ")
-	// 		p := "/Users/yudai.hirose/go/src/github.com/bannzai/switchecker/example/missing/with_external/thirdparty/thirdparty.go"
-	// 		b, err := ioutil.ReadFile(p)
-	// 		if err != nil {
-	// 			panic(err)
-	// 		}
-	// 		f, err := parser.ParseFile(fileSet, p, b, 0)
-	// 		if err != nil {
-	// 			panic(err)
-	// 		}
-	// 		info := types.Info{
-	// 			Uses:   make(map[*ast.Ident]types.Object),
-	// 			Scopes: make(map[ast.Node]*types.Scope),
-	// 		}
-	// 		pkg, err := conf.Check(p, fileSet, []*ast.File{f}, &info)
-	// 		debugf("types.Info.Uses of %+v. and scopes is %+v\n", info.Uses, info.Scopes)
-	// 		if err != nil {
-	// 			panic(err)
-	// 		}
-	// 		pkg.MarkComplete()
-	// 		fmt.Println("END: --- ")
-	// 	}()
-
+	//	func() {
+	//		fmt.Println("DEBUG: --- ")
+	//		p := "/Users/yudai.hirose/go/src/github.com/bannzai/switchecker/example/missing/with_external/thirdparty/thirdparty.go"
+	//		b, err := ioutil.ReadFile(p)
+	//		if err != nil {
+	//			panic(err)
+	//		}
+	//		f, err := parser.ParseFile(fileSet, p, b, 0)
+	//		if err != nil {
+	//			panic(err)
+	//		}
+	//		pkg, err := conf.Check(p, fileSet, []*ast.File{f}, &info)
+	//		debugf("types.Info.Uses of %+v. and scopes is %+v\n", info.Uses, info.Scopes)
+	//		if err != nil {
+	//			panic(err)
+	//		}
+	//		pkg.MarkComplete()
+	//		fmt.Println("END: --- ")
+	//	}()
+	//
 	pkg, err := conf.Check(filepath, fileSet, []*ast.File{astFile}, &info)
 	debugf("types.Info.Uses of %+v. and scopes is %+v\n", info.Uses, info.Scopes)
 	e := types.Error{}
@@ -82,20 +77,21 @@ func check(enums []enum, filepath string) error {
 
 	infos := []checkInfo{}
 
-	for _, enum := range enums {
-		for identifier, use := range info.Uses {
-			// NOTE: it expected namedType.Obj().Name() is "language" if below statement.
-			/*
-				type language int
-				const (
-					golang language = iota
-					swift
-				)
-			*/
-			namedType, ok := use.Type().(*types.Named)
-			if !ok {
-				continue
-			}
+	for identifier, use := range info.Uses {
+		// NOTE: it expected namedType.Obj().Name() is "language" if below statement.
+		/*
+			type language int
+			const (
+				golang language = iota
+				swift
+			)
+		*/
+		namedType, ok := use.Type().(*types.Named)
+		if !ok {
+			continue
+		}
+
+		for _, enum := range enums {
 			debugf("enum.name is %s, use enum type name is %s and start position %d\n", enum.name, namedType.Obj().Name(), identifier.Pos())
 			if enum.name != namedType.Obj().Name() {
 				continue
