@@ -29,7 +29,6 @@ func main() {
 		}
 		defer os.Chdir(pwd)
 
-		fmt.Printf("exec to test.sh\n")
 		cmd := exec.Command("./test.sh")
 		if err := cmd.Start(); err != nil {
 			return err
