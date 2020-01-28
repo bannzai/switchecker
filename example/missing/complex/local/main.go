@@ -24,6 +24,8 @@ func a() {
 	switch lang {
 	case golang:
 		println("golang")
+	case 5:
+		println("literal")
 	default:
 		println("default")
 	}
