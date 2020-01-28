@@ -15,8 +15,9 @@ func main() {
 	}
 
 	exampleRootDirectory := pwd + "/../../example/"
+	var currentPath string
 	err = filepath.Walk(exampleRootDirectory, func(path string, info os.FileInfo, err error) error {
-		fmt.Printf("check test path is %s\n", path)
+		currentPath = path
 		if info.IsDir() {
 			return nil
 		}
@@ -31,17 +32,14 @@ func main() {
 		fmt.Printf("exec to test.sh\n")
 		cmd := exec.Command("./test.sh")
 		if err := cmd.Start(); err != nil {
-			fmt.Printf("start failed\n")
 			return err
 		}
 		if err := cmd.Wait(); err != nil {
-			fmt.Printf("wait failed\n")
 			return err
 		}
-		fmt.Printf("success\n")
 		return nil
 	})
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal(fmt.Sprintf("cause error of %v, path is %s", err, currentPath))
 	}
 }
