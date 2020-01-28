@@ -5,7 +5,8 @@ install:
 	go install github.com/bannzai/$(PROJECT)
 
 .PHONY: test
-test:
+test: install
+	./scripts/test/run.sh
 	go test ./
 
 .PHONY: dry-run
