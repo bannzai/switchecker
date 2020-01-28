@@ -26,6 +26,8 @@ func a() {
 		println("golang")
 	case swift:
 		println("swift")
+	case 5:
+		println("literal")
 	default:
 		println("default")
 	}
