@@ -130,6 +130,25 @@ func Test_check(t *testing.T) {
 			},
 			wantErr: false,
 		},
+		{
+			name: "satisfy_case_of_complex_definition",
+			args: args{
+				enums: []enum{
+					{
+						name:        "language7",
+						packageName: "testdata",
+						patterns: []string{
+							"golang7",
+							"swift7",
+							"objectivec7",
+							"ruby7",
+							"typescript7",
+						}},
+				},
+				filepaths: []string{testutil.CallerDirectoryPath(t) + "/testdata/satisfy_case_of_complex_definition.go"},
+			},
+			wantErr: false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
