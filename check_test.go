@@ -17,7 +17,7 @@ func Test_check(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name: "check_not_enum_case_function",
+			name: "no_satisfy_case",
 			args: args{
 				enums: []enum{
 					{
@@ -31,7 +31,7 @@ func Test_check(t *testing.T) {
 							"typescript1",
 						}},
 				},
-				filepaths: []string{testutil.CallerDirectoryPath(t) + "/testdata/check_not_enum_case_function.go"},
+				filepaths: []string{testutil.CallerDirectoryPath(t) + "/testdata/no_satisfy_case.go"},
 			},
 			wantErr: true,
 		},
