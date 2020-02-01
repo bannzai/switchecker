@@ -168,6 +168,25 @@ func Test_check(t *testing.T) {
 			},
 			wantErr: true,
 		},
+		{
+			name: "no_satisfy_case_of_complex_definition",
+			args: args{
+				enums: []enum{
+					{
+						name:        "language9",
+						packageName: "testdata",
+						patterns: []string{
+							"golang9",
+							"swift9",
+							"objectivec9",
+							"ruby9",
+							"typescript9",
+						}},
+				},
+				filepaths: []string{testutil.CallerDirectoryPath(t) + "/testdata/no_satisfy_case_of_complex_definition.go"},
+			},
+			wantErr: true,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
