@@ -1,0 +1,25 @@
+name: test
+on: [push, pull_request]
+jobs:
+  build:
+    name: Test
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    steps:
+    - name: Set up Go 1.13
+      uses: actions/setup-go@v1
+      with:
+        go-version: 1.13
+      id: setup
+    - name: Check out code into the Go module directory
+      uses: actions/checkout@v2
+      id: checkout
+    - name: add-path
+      run: echo ::add-path::$(go env GOPATH)/bin
+      shell: bash
+    - name: CI Test
+      run: make test
+      id: test
+      shell: bash
