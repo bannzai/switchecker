@@ -13,6 +13,7 @@ test: install
 ci-test: install
 	export PATH="${GOPATH}/bin:${PATH}"
 	which $(PROJECT)
+	which $(PROJECT)
 	./scripts/test/run.sh
 	make test
 
