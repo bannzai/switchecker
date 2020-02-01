@@ -19,5 +19,5 @@ jobs:
     - name: CI Test
       run: |
         export PATH=$PATH:$(go env GOPATH)/bin
-        make ci-test
+        make test
       id: test
