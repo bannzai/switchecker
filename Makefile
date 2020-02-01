@@ -12,11 +12,6 @@ test: install
 .PHONY: ci-test
 ci-test: install
 	export PATH="${GOPATH}/bin:${PATH}"
-	echo $(go env GOPATH)
-	echo $(go env GOBIN)
-	echo ${GOPATH}
-	ls /bin
-	which $(PROJECT)
 	./scripts/test/run.sh
 	make test
 
