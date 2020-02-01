@@ -38,12 +38,8 @@ func main() {
 	debugf("enum parse start: \n")
 	enums := parse(sources)
 	debugf("enum parse end: %v\n", enums)
-	for _, targetPath := range targets {
-		debugf("start check %s\n", targetPath)
-		if err := check(enums, targetPath); err != nil {
-			log.Fatal(err)
-		}
-		debugf("end check %s\n", targetPath)
+	if err := check(enums, targets); err != nil {
+		log.Fatal(err)
 	}
 
 	fmt.Println("\033[32mSuccesfull!!\033[0m")
