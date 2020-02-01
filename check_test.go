@@ -8,8 +8,8 @@ import (
 
 func Test_check(t *testing.T) {
 	type args struct {
-		enums    []enum
-		filepath string
+		enums     []enum
+		filepaths []string
 	}
 	tests := []struct {
 		name    string
@@ -31,7 +31,7 @@ func Test_check(t *testing.T) {
 							"typescript1",
 						}},
 				},
-				filepath: testutil.CallerDirectoryPath(t) + "/testdata/check_not_enum_case_function.go",
+				filepaths: []string{testutil.CallerDirectoryPath(t) + "/testdata/check_not_enum_case_function.go"},
 			},
 			wantErr: true,
 		},
@@ -50,7 +50,7 @@ func Test_check(t *testing.T) {
 							"typescript2",
 						}},
 				},
-				filepath: testutil.CallerDirectoryPath(t) + "/testdata/check_wrote_all_case_function.go",
+				filepaths: []string{testutil.CallerDirectoryPath(t) + "/testdata/check_wrote_all_case_function.go"},
 			},
 			wantErr: false,
 		},
@@ -67,7 +67,7 @@ func Test_check(t *testing.T) {
 							"Cherry",
 						}},
 				},
-				filepath: testutil.CallerDirectoryPath(t) + "/testdata/check_all_case_when_exported_package.go",
+				filepaths: []string{testutil.CallerDirectoryPath(t) + "/testdata/check_all_case_when_exported_package.go"},
 			},
 			wantErr: false,
 		},
@@ -86,14 +86,14 @@ func Test_check(t *testing.T) {
 							"typescript3",
 						}},
 				},
-				filepath: testutil.CallerDirectoryPath(t) + "/testdata/check_plural_switch_pattern.go",
+				filepaths: []string{testutil.CallerDirectoryPath(t) + "/testdata/check_plural_switch_pattern.go"},
 			},
 			wantErr: true,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := check(tt.args.enums, tt.args.filepath); (got != nil) != tt.wantErr {
+			if got := check(tt.args.enums, tt.args.filepaths); (got != nil) != tt.wantErr {
 				t.Errorf("check() = %v, wantErr %v", got, tt.wantErr)
 			}
 		})
