@@ -11,7 +11,7 @@ test: install
 
 .PHONY: ci-test
 ci-test: install
-	export PATH="$GOPATH/bin:$PATH"
+	export PATH="${GOPATH}/bin:${PATH}"
 	./scripts/test/run.sh
 	make test
 
