@@ -149,6 +149,25 @@ func Test_check(t *testing.T) {
 			},
 			wantErr: false,
 		},
+		{
+			name: "no_satisfy_case_of_single_line_definition",
+			args: args{
+				enums: []enum{
+					{
+						name:        "language8",
+						packageName: "testdata",
+						patterns: []string{
+							"golang8",
+							"swift8",
+							"objectivec8",
+							"ruby8",
+							"typescript8",
+						}},
+				},
+				filepaths: []string{testutil.CallerDirectoryPath(t) + "/testdata/no_satisfy_case_of_single_line_definition.go"},
+			},
+			wantErr: true,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
