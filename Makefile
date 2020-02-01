@@ -9,12 +9,6 @@ test: install
 	./scripts/test/run.sh
 	go test ./
 
-.PHONY: ci-test
-ci-test: install
-	export PATH="${GOPATH}/bin:${PATH}"
-	./scripts/test/run.sh
-	make test
-
 .PHONY: dry-run
 dry-run: install
 	$(PROJECT)
