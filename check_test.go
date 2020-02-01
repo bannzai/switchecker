@@ -55,23 +55,6 @@ func Test_check(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name: "check_all_case_when_exported_package",
-			args: args{
-				enums: []enum{
-					{
-						name:        "Fruit",
-						packageName: "x",
-						patterns: []string{
-							"Apple",
-							"Orange",
-							"Cherry",
-						}},
-				},
-				filepaths: []string{testutil.CallerDirectoryPath(t) + "/testdata/check_all_case_when_exported_package.go"},
-			},
-			wantErr: false,
-		},
-		{
 			name: "check_plural_switch_pattern",
 			args: args{
 				enums: []enum{
@@ -89,6 +72,25 @@ func Test_check(t *testing.T) {
 				filepaths: []string{testutil.CallerDirectoryPath(t) + "/testdata/check_plural_switch_pattern.go"},
 			},
 			wantErr: true,
+		},
+		{
+			name: "satisfy_case_for_exported_package",
+			args: args{
+				enums: []enum{
+					{
+						name:        "Language4",
+						packageName: "x",
+						patterns: []string{
+							"Golang4",
+							"Swift4",
+							"Objectivec4",
+							"Ruby4",
+							"Typescript4",
+						}},
+				},
+				filepaths: []string{testutil.CallerDirectoryPath(t) + "/testdata/satisfy_case_for_exported_package.go"},
+			},
+			wantErr: false,
 		},
 	}
 	for _, tt := range tests {

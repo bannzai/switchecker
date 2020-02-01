@@ -1,9 +1,11 @@
 package x
 
-type Fruit string
+type Language4 int
 
 const (
-	Apple  Fruit = "Apple"
-	Orange Fruit = "Orange"
-	Cherry Fruit = "Cherry"
+	Golang4 Language4 = iota
+	Swift4
+	Objectivec4
+	Ruby4
+	Typescript4
 )
