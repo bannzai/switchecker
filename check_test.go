@@ -36,7 +36,7 @@ func Test_check(t *testing.T) {
 			wantErr: true,
 		},
 		{
-			name: "check_wrote_all_case_function",
+			name: "satisfy_case",
 			args: args{
 				enums: []enum{
 					{
@@ -50,7 +50,7 @@ func Test_check(t *testing.T) {
 							"typescript2",
 						}},
 				},
-				filepaths: []string{testutil.CallerDirectoryPath(t) + "/testdata/check_wrote_all_case_function.go"},
+				filepaths: []string{testutil.CallerDirectoryPath(t) + "/testdata/satisfy_case.go"},
 			},
 			wantErr: false,
 		},
