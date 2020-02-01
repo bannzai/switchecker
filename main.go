@@ -58,5 +58,5 @@ func main() {
 		log.Fatal(err)
 	}
 
-	fmt.Println("\033[32mSuccesfull!!\033[0m")
+	fmt.Printf("\033[32mSuccesfull!! $ switchecker -source=%s -target=%s\033[0m\n", source, target)
 }
