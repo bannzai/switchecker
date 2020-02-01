@@ -18,6 +18,8 @@ jobs:
       id: checkout
     - name: add-path
       run: echo ::add-path::$(go env GOPATH)/bin
+      shell: bash
     - name: CI Test
       run: make test
       id: test
+      shell: bash
