@@ -12,7 +12,7 @@ test: install
 .PHONY: ci-test
 ci-test: install
 	export PATH="${GOPATH}/bin:${PATH}"
-	which $(PROJECT)
+	ls /bin
 	which $(PROJECT)
 	./scripts/test/run.sh
 	make test
