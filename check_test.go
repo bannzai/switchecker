@@ -92,6 +92,25 @@ func Test_check(t *testing.T) {
 			},
 			wantErr: false,
 		},
+		{
+			name: "no_satisfy_case_for_exported_package",
+			args: args{
+				enums: []enum{
+					{
+						name:        "Language4",
+						packageName: "x",
+						patterns: []string{
+							"Golang4",
+							"Swift4",
+							"Objectivec4",
+							"Ruby4",
+							"Typescript4",
+						}},
+				},
+				filepaths: []string{testutil.CallerDirectoryPath(t) + "/testdata/no_satisfy_case_for_exported_package.go"},
+			},
+			wantErr: true,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
