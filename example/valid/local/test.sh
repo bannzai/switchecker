@@ -2,7 +2,7 @@
 set -u
 set -o pipefail
 
-switchecker -source=main.go -target=main.go --verbose
+switchecker -source=main.go -target=main.go,a.go --verbose
 if [ $? -ne 0 ]; then
   echo "Test Failed"
   exit 1
