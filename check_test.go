@@ -55,7 +55,7 @@ func Test_check(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name: "check_plural_switch_pattern",
+			name: "satisfy_case_when_multipy_caller",
 			args: args{
 				enums: []enum{
 					{
@@ -69,7 +69,7 @@ func Test_check(t *testing.T) {
 							"typescript3",
 						}},
 				},
-				filepaths: []string{testutil.CallerDirectoryPath(t) + "/testdata/check_plural_switch_pattern.go"},
+				filepaths: []string{testutil.CallerDirectoryPath(t) + "/testdata/satisfy_case_when_multipy_caller.go"},
 			},
 			wantErr: true,
 		},
