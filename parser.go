@@ -25,10 +25,6 @@ func parse(filepaths []string) []enum {
 		e.packagePath = filepath.Dir(path)
 
 		ast.Inspect(astFile, func(node ast.Node) bool {
-			// end inspect
-			if node == nil {
-				return false
-			}
 			// parsed enum declearation
 			decl, ok := node.(*ast.GenDecl)
 			if !ok {
