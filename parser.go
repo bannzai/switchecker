@@ -80,6 +80,13 @@ func parse(filepaths []string) []enum {
 				return false
 			}
 
+			/* NOTE: It traversed declarations. For example
+			type a struct {}
+			type b interface{}
+			type c int
+			const d = "d"
+			var e = "e"
+			*/
 			for _, decl := range f.Decls {
 				decl, ok := decl.(*ast.GenDecl)
 				if !ok {
@@ -90,6 +97,16 @@ func parse(filepaths []string) []enum {
 				}
 
 				patterns := []string{}
+
+				/* NOTE: For example
+				const (
+					golang language = iota
+					swift
+					objectivec
+					ruby
+					typescript
+				)
+				*/
 				for _, spec := range decl.Specs {
 					valueSpec, ok := spec.(*ast.ValueSpec)
 					if !ok {
@@ -114,11 +131,6 @@ func parse(filepaths []string) []enum {
 						e.name = ident.Name
 					}
 
-					if e.name == "" {
-						debugf("e.name is empty. will patterns is %+v\n", valueSpec.Names)
-						continue
-					}
-
 					for _, name := range valueSpec.Names {
 						if name.Name == "_" {
 							continue
@@ -128,7 +140,10 @@ func parse(filepaths []string) []enum {
 				}
 				e.patterns = patterns
 
-				enums = append(enums, e)
+				isEnumDefinition := e.name != "" && len(e.patterns) != 0
+				if isEnumDefinition {
+					enums = append(enums, e)
+				}
 			}
 			return true
 		})

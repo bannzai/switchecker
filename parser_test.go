@@ -108,6 +108,15 @@ func Test_parse(t *testing.T) {
 			},
 			want: []enum{},
 		},
+		{
+			name: "No support only constatnt definition",
+			args: args{
+				filepaths: []string{
+					testutil.CallerDirectoryPath(t) + "/testdata/parser/no_support_only_constatnt_definition.go",
+				},
+			},
+			want: []enum{},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
