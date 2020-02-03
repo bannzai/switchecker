@@ -76,6 +76,29 @@ func Test_parse(t *testing.T) {
 			},
 			want: []enum{},
 		},
+		{
+			name: "Separate go file for define type and constant values",
+			args: args{
+				filepaths: []string{
+					testutil.CallerDirectoryPath(t) + "/testdata/parser/type_define_only.go",
+					testutil.CallerDirectoryPath(t) + "/testdata/parser/constant_values_only.go",
+				},
+			},
+			want: []enum{
+				{
+					name:        "language",
+					packageName: "testdata",
+					packagePath: testutil.CallerDirectoryPath(t) + "/testdata/parser",
+					patterns: []string{
+						"golang",
+						"swift",
+						"objectivec",
+						"ruby",
+						"typescript",
+					},
+				},
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
