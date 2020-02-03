@@ -21,14 +21,14 @@ func Test_parse(t *testing.T) {
 			name: "successfully parsed enum",
 			args: args{
 				filepaths: []string{
-					testutil.CallerDirectoryPath(t) + "/testdata/parser.go",
+					testutil.CallerDirectoryPath(t) + "/testdata/parser/parser.go",
 				},
 			},
 			want: []enum{
 				{
 					name:        "language",
 					packageName: "testdata",
-					packagePath: testutil.CallerDirectoryPath(t) + "/testdata",
+					packagePath: testutil.CallerDirectoryPath(t) + "/testdata/parser",
 					patterns: []string{
 						"golang",
 						"swift",
@@ -43,14 +43,14 @@ func Test_parse(t *testing.T) {
 			name: "complex gofile pattern",
 			args: args{
 				filepaths: []string{
-					testutil.CallerDirectoryPath(t) + "/testdata/parser2.go",
+					testutil.CallerDirectoryPath(t) + "/testdata/parser/parser2.go",
 				},
 			},
 			want: []enum{
 				{
 					name:        "staticlanguage",
 					packageName: "testdata",
-					packagePath: testutil.CallerDirectoryPath(t) + "/testdata",
+					packagePath: testutil.CallerDirectoryPath(t) + "/testdata/parser",
 					patterns: []string{
 						"golang",
 						"swift",
@@ -59,7 +59,7 @@ func Test_parse(t *testing.T) {
 				{
 					name:        "dynamiclanguage",
 					packageName: "testdata",
-					packagePath: testutil.CallerDirectoryPath(t) + "/testdata",
+					packagePath: testutil.CallerDirectoryPath(t) + "/testdata/parser",
 					patterns: []string{
 						"ruby",
 						"python",
