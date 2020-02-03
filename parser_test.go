@@ -67,6 +67,15 @@ func Test_parse(t *testing.T) {
 				},
 			},
 		},
+		{
+			name: "No support define in function",
+			args: args{
+				filepaths: []string{
+					testutil.CallerDirectoryPath(t) + "/testdata/parser/no_support_define_in_function.go",
+				},
+			},
+			want: []enum{},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
