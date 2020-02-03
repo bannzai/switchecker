@@ -21,7 +21,7 @@ func Test_parse(t *testing.T) {
 			name: "successfully parsed enum",
 			args: args{
 				filepaths: []string{
-					testutil.CallerDirectoryPath(t) + "/testdata/parser/parser.go",
+					testutil.CallerDirectoryPath(t) + "/testdata/parser/simple.go",
 				},
 			},
 			want: []enum{
@@ -43,7 +43,7 @@ func Test_parse(t *testing.T) {
 			name: "complex gofile pattern",
 			args: args{
 				filepaths: []string{
-					testutil.CallerDirectoryPath(t) + "/testdata/parser/parser2.go",
+					testutil.CallerDirectoryPath(t) + "/testdata/parser/multiple_definition.go",
 				},
 			},
 			want: []enum{
