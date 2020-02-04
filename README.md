@@ -2,7 +2,7 @@
 switchecker is tool of checking for missing switch case about go enum(Actually, this is not enum. It is constant value) in go file.
 It can be take safety when using `switch` word in go source code.
 It is ignore for dirty `case` (e.g case 5, case "strings"). 
-So, switcher only support to check the missing `case`.
+So, switcher only support to check the missing `case` and global definition value.
 
 ## Install
 ```bash
