@@ -21,14 +21,14 @@ func Test_parse(t *testing.T) {
 			name: "successfully parsed enum",
 			args: args{
 				filepaths: []string{
-					testutil.CallerDirectoryPath(t) + "/testdata/parser.go",
+					testutil.CallerDirectoryPath(t) + "/testdata/parser/simple.go",
 				},
 			},
 			want: []enum{
 				{
 					name:        "language",
 					packageName: "testdata",
-					packagePath: testutil.CallerDirectoryPath(t) + "/testdata",
+					packagePath: testutil.CallerDirectoryPath(t) + "/testdata/parser",
 					patterns: []string{
 						"golang",
 						"swift",
@@ -43,14 +43,14 @@ func Test_parse(t *testing.T) {
 			name: "complex gofile pattern",
 			args: args{
 				filepaths: []string{
-					testutil.CallerDirectoryPath(t) + "/testdata/parser2.go",
+					testutil.CallerDirectoryPath(t) + "/testdata/parser/multiple_definition.go",
 				},
 			},
 			want: []enum{
 				{
 					name:        "staticlanguage",
 					packageName: "testdata",
-					packagePath: testutil.CallerDirectoryPath(t) + "/testdata",
+					packagePath: testutil.CallerDirectoryPath(t) + "/testdata/parser",
 					patterns: []string{
 						"golang",
 						"swift",
@@ -59,13 +59,63 @@ func Test_parse(t *testing.T) {
 				{
 					name:        "dynamiclanguage",
 					packageName: "testdata",
-					packagePath: testutil.CallerDirectoryPath(t) + "/testdata",
+					packagePath: testutil.CallerDirectoryPath(t) + "/testdata/parser",
 					patterns: []string{
 						"ruby",
 						"python",
 					},
 				},
 			},
+		},
+		{
+			name: "No support define in function",
+			args: args{
+				filepaths: []string{
+					testutil.CallerDirectoryPath(t) + "/testdata/parser/no_support_define_in_function.go",
+				},
+			},
+			want: []enum{},
+		},
+		{
+			name: "Separate go file for define type and constant values",
+			args: args{
+				filepaths: []string{
+					testutil.CallerDirectoryPath(t) + "/testdata/parser/type_define_only.go",
+					testutil.CallerDirectoryPath(t) + "/testdata/parser/constant_values_only.go",
+				},
+			},
+			want: []enum{
+				{
+					name:        "language",
+					packageName: "testdata",
+					packagePath: testutil.CallerDirectoryPath(t) + "/testdata/parser",
+					patterns: []string{
+						"golang",
+						"swift",
+						"objectivec",
+						"ruby",
+						"typescript",
+					},
+				},
+			},
+		},
+		{
+			name: "No support type defined struct",
+			args: args{
+				filepaths: []string{
+					testutil.CallerDirectoryPath(t) + "/testdata/parser/no_support_type_define_struct_and_interface.go",
+				},
+			},
+			want: []enum{},
+		},
+		{
+			name: "No support only constatnt definition",
+			args: args{
+				filepaths: []string{
+					testutil.CallerDirectoryPath(t) + "/testdata/parser/no_support_only_constatnt_definition.go",
+				},
+			},
+			want: []enum{},
 		},
 	}
 	for _, tt := range tests {
