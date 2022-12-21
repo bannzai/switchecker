@@ -15,8 +15,8 @@ type enum struct {
 	patterns    []string
 }
 
-// parse traverse go file and these map to []enum.
-// ast strcture can be confirmed from here: https://play.golang.org/p/aitWi-5RoHj
+// `parse` from target .go files and generate to []enum
+//  NOTE: dump AST go playground https://play.golang.org/p/aitWi-5RoHj
 func parse(filepaths []string) []enum {
 
 	type enumDeclInfo struct {
@@ -80,7 +80,7 @@ func parse(filepaths []string) []enum {
 				return false
 			}
 
-			/* NOTE: It traversed declarations. For example
+			/* NOTE: Step of traversing declarations. For example
 			type a struct {}
 			type b interface{}
 			type c int
