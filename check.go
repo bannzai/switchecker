@@ -63,7 +63,6 @@ func check(enums []enum, filepaths []string) error {
 						continue
 					}
 
-					// FIXME: It is difficult to tell about `switch x` ast.SwitchStmt or  `case xyz:` ast.SwitchStmt.
 					patternContainer := map[string]struct{}{}
 					for _, stmt := range switchNode.Body.List {
 						debugf("stmt is %v\n", stmt)
